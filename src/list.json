@@ -1,0 +1,124 @@
+{
+  "CATEGORIES": {
+    "Jeux vidéo, console": {
+      "PlayStation": {
+        "PS5": [
+          "Consoles PS5",
+          "Jeux PS5",
+          "Accessoires PS5",
+          "Jeux PS5 en précommande",
+          "Nouveautés PS5",
+          "PS5 d'occasion"
+        ],
+        "PS4": [
+          "Consoles PS4",
+          "Jeux PS4",
+          "Accessoires PS4",
+          "Jeux PS4 en précommande",
+          "Nouveautés PS4",
+          "PS4 d'occasion"
+        ]
+      },
+      "Xbox": {
+        "Xbox Series": [
+          "Consoles Xbox Series X",
+          "Consoles Xbox Series S",
+          "Jeux Xbox Series",
+          "Accessoires Xbox Series",
+          "Jeux Xbox Series en précommande",
+          "Nouveautés Xbox Series"
+        ],
+        "Xbox One": [
+          "Consoles Xbox One",
+          "Jeux Xbox One",
+          "Accessoires Xbox One",
+          "Jeux Xbox One en précommande",
+          "Nouveautés Xbox One",
+          "Xbox One d'occasion"
+        ]
+      },
+      "Nintendo": {
+        "Nintendo Switch": [
+          "Consoles Nintendo Switch",
+          "Jeux Nintendo Switch",
+          "Accessoires Nintendo Switch",
+          "Jeux Nintendo Switch en précommande",
+          "Nouveautés Switch",
+          "Nintendo Switch d'occasion"
+        ],
+        "Nintendo DS": [
+          "Consoles DS",
+          "Jeux DS",
+          "Accessoires DS",
+          "Nintendo DS Lite"
+        ]
+      },
+      "PC Gaming": {
+        "Hardware": [
+          "Ordinateur portable gamer",
+          "Ordinateur de bureau gamer",
+          "PC de bureau gaming",
+          "PC portables gaming"
+        ],
+        "Software": [
+          "PC à télécharger",
+          "Jeux PC",
+          "DLC / Extensions"
+        ],
+        "Accessories": [
+          "Accessoires PC",
+          "Écran gamer",
+          "Casque gamer",
+          "Volant gamer",
+          "Fauteuil gamer",
+          "Bureau gamer"
+        ]
+      },
+      "Réalité Virtuelle (VR)": {
+        "Casques VR": [
+          "Casque Oculus",
+          "HTC Vive",
+          "PlayStation VR",
+          "Meta Quest"
+        ],
+        "Accessoires VR": [
+          "Manettes VR",
+          "Capteurs VR",
+          "Accessoires divers VR"
+        ]
+      },
+      "Produits dérivés": {
+        "Figurines et Goodies": [
+          "Figurines",
+          "Cartes de jeux",
+          "Jeux de rôle",
+          "Livres",
+          "T-shirts",
+          "Skylanders"
+        ]
+      },
+      "Seconde Main": {
+        "Consoles d'occasion": [
+          "PS5 d'occasion",
+          "PS4 d'occasion",
+          "Xbox One d'occasion",
+          "Nintendo Switch d'occasion"
+        ],
+        "Jeux d'occasion": [
+          "Tous les jeux vidéo d'occasion",
+          "Lots de jeux vidéo",
+          "Bonne occasion",
+          "Revente cadeau Noël 2024"
+        ]
+      },
+      "Bornes d'arcade": {
+        "Types de bornes": [
+          "Borne d'arcade classique",
+          "Borne d'arcade mini",
+          "Borne d'arcade personnalisée",
+          "Accessoires pour borne d'arcade"
+        ]
+      }
+    }
+  }
+} 
