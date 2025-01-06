@@ -13,7 +13,7 @@ export default defineConfig({
   json: {
     stringify: true
   },
-  base: '/Projet_3/',
+  base: process.env.NODE_ENV === 'production' ? '/Projet_3/' : '/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

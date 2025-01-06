@@ -3,8 +3,7 @@ import { CategoryData, CategoryOption } from '../../types';
 import { isImageFile, readImageFile } from '../../utils/fileUtils';
 import { Upload, ChevronLeft, ChevronRight, Save, Download, ChevronDown } from 'lucide-react';
 import { getCategoryOptions, getSubcategoryOptions, getSubSubcategoryOptions } from '../../utils/categoryUtils';
-// @ts-ignore
-import categoriesData from '@/list.json';
+import categoriesData from '../../list.json';
 
 interface ImageData {
   file: File;
