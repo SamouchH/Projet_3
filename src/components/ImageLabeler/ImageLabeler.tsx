@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ImageLabel, LabeledImage, CategoryData, CategoryOption } from '../../types';
+import { CategoryData, CategoryOption } from '../../types';
 import { isImageFile, readImageFile } from '../../utils/fileUtils';
 import { Upload, ChevronLeft, ChevronRight, Save, Download, ChevronDown } from 'lucide-react';
 import { getCategoryOptions, getSubcategoryOptions, getSubSubcategoryOptions } from '../../utils/categoryUtils';

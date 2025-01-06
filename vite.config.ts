@@ -13,5 +13,15 @@ export default defineConfig({
   json: {
     stringify: true
   },
-  base: process.env.NODE_ENV === 'production' ? '/image-labeler/' : '/'
+  base: '/Projet_3/',
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
+  }
 })
