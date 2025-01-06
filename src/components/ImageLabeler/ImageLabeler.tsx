@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CategoryData, CategoryOption } from '../../types';
+import { CategoryOption } from '../../types';
 import { isImageFile, readImageFile } from '../../utils/fileUtils';
 import { Upload, ChevronLeft, ChevronRight, Save, Download, ChevronDown } from 'lucide-react';
 import { getCategoryOptions, getSubcategoryOptions, getSubSubcategoryOptions } from '../../utils/categoryUtils';
@@ -20,9 +20,9 @@ export const ImageLabeler = () => {
   const [subcategory, setSubcategory] = useState<string>('');
   const [subsubcategory, setSubsubcategory] = useState<string>('');
 
-  const categoryOptions = getCategoryOptions(categoriesData as CategoryData);
-  const subcategoryOptions = getSubcategoryOptions(categoriesData as CategoryData, category);
-  const subsubcategoryOptions = getSubSubcategoryOptions(categoriesData as CategoryData, category, subcategory);
+  const categoryOptions = getCategoryOptions(categoriesData);
+  const subcategoryOptions = getSubcategoryOptions(categoriesData, category);
+  const subsubcategoryOptions = getSubSubcategoryOptions(categoriesData, category, subcategory);
 
   // Reset dependent fields when parent category changes
   useEffect(() => {
@@ -145,9 +145,9 @@ export const ImageLabeler = () => {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
-        className={`w-full px-4 py-2 border rounded-lg appearance-none bg-white
+        className={`w-full px-3 py-1.5 border rounded-md appearance-none bg-white text-sm
           ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'cursor-pointer'}
-          focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+          focus:ring-1 focus:ring-blue-500 focus:border-blue-500`}
       >
         <option value="">{placeholder}</option>
         {options.map((option) => (
@@ -156,16 +156,16 @@ export const ImageLabeler = () => {
           </option>
         ))}
       </select>
-      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+      <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
     </div>
   );
 
   return (
-    <div className="flex w-full gap-6">
+    <div className="flex w-full gap-4">
       {/* Left side - Form */}
-      <div className="w-1/3 bg-white rounded-lg shadow-lg p-6 flex flex-col">
+      <div className="w-1/4 bg-white rounded-lg shadow p-4 flex flex-col">
         {/* File Upload Section */}
-        <div className="mb-8">
+        <div className="mb-4">
           <div className="relative">
             <input
               type="file"
@@ -174,18 +174,18 @@ export const ImageLabeler = () => {
               multiple
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
             />
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors">
-              <Upload className="mx-auto h-12 w-12 text-gray-400 mb-2" />
-              <p className="text-sm text-gray-600">Drop images here or click to upload</p>
-              <p className="text-xs text-gray-500 mt-1">Supports multiple images</p>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors">
+              <Upload className="mx-auto h-8 w-8 text-gray-400 mb-1" />
+              <p className="text-sm text-gray-600">Drop images here</p>
+              <p className="text-xs text-gray-500">Supports multiple images</p>
             </div>
           </div>
         </div>
 
         {/* Form Fields */}
-        <div className="space-y-6 flex-grow">
+        <div className="space-y-4 flex-grow">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Category
             </label>
             <Select
@@ -197,7 +197,7 @@ export const ImageLabeler = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Subcategory
             </label>
             <Select
@@ -210,7 +210,7 @@ export const ImageLabeler = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Sub-subcategory
             </label>
             <Select
@@ -224,19 +224,19 @@ export const ImageLabeler = () => {
         </div>
 
         {/* Navigation and Actions */}
-        <div className="mt-6 space-y-4">
-          <div className="flex justify-between items-center">
+        <div className="mt-4 space-y-2">
+          <div className="flex justify-between items-center gap-2">
             <button
               onClick={handlePrevious}
               disabled={currentIndex === 0}
-              className="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center px-2 py-1.5 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <ChevronLeft className="w-4 h-4 mr-1" />
-              Previous
+              <ChevronLeft className="w-4 h-4" />
+              Prev
             </button>
             <button
               onClick={handleSave}
-              className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              className="flex items-center px-3 py-1.5 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
             >
               <Save className="w-4 h-4 mr-1" />
               Save
@@ -244,44 +244,35 @@ export const ImageLabeler = () => {
             <button
               onClick={handleNext}
               disabled={currentIndex === images.length - 1}
-              className="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center px-2 py-1.5 bg-white border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
-              <ChevronRight className="w-4 h-4 ml-1" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
           <button
             onClick={exportToCSV}
-            className="w-full flex items-center justify-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+            disabled={images.length === 0}
+            className="w-full flex items-center justify-center px-3 py-1.5 bg-green-500 text-white text-sm rounded-md hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Download className="w-4 h-4 mr-2" />
-            Export to CSV
+            <Download className="w-4 h-4 mr-1" />
+            Export CSV
           </button>
         </div>
       </div>
 
-      {/* Right side - Image */}
-      <div className="w-2/3 bg-white rounded-lg shadow-lg p-6 flex flex-col">
-        {images.length > 0 && currentIndex < images.length ? (
-          <>
-            <div className="text-sm text-gray-500 mb-4 flex justify-between items-center">
-              <span>Image {currentIndex + 1} of {images.length}</span>
-              <span className="font-medium">{images[currentIndex].file.name}</span>
-            </div>
-            <div className="flex-grow flex items-center justify-center bg-gray-50 rounded-lg overflow-hidden">
-              <img
-                src={images[currentIndex].url}
-                alt={`Image ${currentIndex + 1}`}
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-          </>
+      {/* Right side - Image Preview */}
+      <div className="w-3/4 bg-white rounded-lg shadow p-4">
+        {images[currentIndex] ? (
+          <img
+            src={images[currentIndex].url}
+            alt={`Image ${currentIndex + 1}`}
+            className="w-full h-[calc(100vh-8rem)] object-contain rounded-lg"
+          />
         ) : (
-          <div className="h-full flex flex-col items-center justify-center text-gray-400">
-            <Upload className="h-16 w-16 mb-4" />
-            <p className="text-lg">No images uploaded</p>
-            <p className="text-sm mt-2">Upload images to start labeling</p>
+          <div className="flex items-center justify-center h-[calc(100vh-8rem)] bg-gray-50 rounded-lg">
+            <p className="text-gray-500 text-sm">No image selected</p>
           </div>
         )}
       </div>

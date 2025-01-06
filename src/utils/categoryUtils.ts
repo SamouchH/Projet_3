@@ -1,16 +1,25 @@
-import { CategoryData, CategoryOption } from '../types';
+import { CategoryOption } from '../types';
+
+interface CategoryData {
+  CATEGORIES: {
+    [key: string]: {
+      [key: string]: {
+        [key: string]: string[];
+      };
+    };
+  };
+}
 
 export const getCategoryOptions = (data: CategoryData): CategoryOption[] => {
-  const topLevelData = data.CATEGORIES["Jeux vidéo, console"];
-  return Object.keys(topLevelData).map(category => ({
+  const categories = Object.keys(data.CATEGORIES["Jeux vidéo, console"]);
+  return categories.map(category => ({
     label: category,
     value: category
   }));
 };
 
 export const getSubcategoryOptions = (data: CategoryData, category: string): CategoryOption[] => {
-  const topLevelData = data.CATEGORIES["Jeux vidéo, console"];
-  const categoryData = topLevelData[category];
+  const categoryData = data.CATEGORIES["Jeux vidéo, console"][category];
   if (!categoryData) return [];
 
   return Object.keys(categoryData).map(subcategory => ({
@@ -24,8 +33,7 @@ export const getSubSubcategoryOptions = (
   category: string,
   subcategory: string
 ): CategoryOption[] => {
-  const topLevelData = data.CATEGORIES["Jeux vidéo, console"];
-  const categoryData = topLevelData[category];
+  const categoryData = data.CATEGORIES["Jeux vidéo, console"][category];
   if (!categoryData) return [];
 
   const subcategoryData = categoryData[subcategory];
