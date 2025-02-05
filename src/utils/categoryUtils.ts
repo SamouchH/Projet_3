@@ -3,9 +3,7 @@ import { CategoryOption } from '../types';
 interface CategoryData {
   CATEGORIES: {
     [key: string]: {
-      [key: string]: {
-        [key: string]: string[];
-      };
+      [key: string]: string[];
     };
   };
 }
@@ -22,25 +20,39 @@ export const getSubcategoryOptions = (data: CategoryData, category: string): Cat
   const categoryData = data.CATEGORIES["Jeux vidéo, console"][category];
   if (!categoryData) return [];
 
-  return Object.keys(categoryData).map(subcategory => ({
+  return categoryData.map(subcategory => ({
     label: subcategory,
     value: subcategory
   }));
 };
 
-export const getSubSubcategoryOptions = (
+export const addCustomCategory = (data: CategoryData, category: string): CategoryData => {
+  return {
+    ...data,
+    CATEGORIES: {
+      "Jeux vidéo, console": {
+        ...data.CATEGORIES["Jeux vidéo, console"],
+        [category]: []
+      }
+    }
+  };
+};
+
+export const addCustomSubcategory = (
   data: CategoryData,
   category: string,
   subcategory: string
-): CategoryOption[] => {
+): CategoryData => {
   const categoryData = data.CATEGORIES["Jeux vidéo, console"][category];
-  if (!categoryData) return [];
+  if (!categoryData) return data;
 
-  const subcategoryData = categoryData[subcategory];
-  if (!subcategoryData || !Array.isArray(subcategoryData)) return [];
-
-  return subcategoryData.map(item => ({
-    label: item,
-    value: item
-  }));
+  return {
+    ...data,
+    CATEGORIES: {
+      "Jeux vidéo, console": {
+        ...data.CATEGORIES["Jeux vidéo, console"],
+        [category]: [...categoryData, subcategory]
+      }
+    }
+  };
 }; 

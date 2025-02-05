@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { CategoryOption } from '../../types';
 import { isImageFile, readImageFile } from '../../utils/fileUtils';
-import { Upload, ChevronLeft, ChevronRight, Save, Download, ChevronDown } from 'lucide-react';
-import { getCategoryOptions, getSubcategoryOptions, getSubSubcategoryOptions } from '../../utils/categoryUtils';
+import { Upload, ChevronLeft, ChevronRight, Save, Download, ChevronDown, Plus, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { getCategoryOptions, getSubcategoryOptions, addCustomCategory, addCustomSubcategory } from '../../utils/categoryUtils';
 import categoriesData from '../../list.json';
 
 interface ImageData {
@@ -10,7 +10,6 @@ interface ImageData {
   url: string;
   category: string;
   subcategory: string;
-  subsubcategory: string;
 }
 
 export const ImageLabeler = () => {
@@ -18,33 +17,32 @@ export const ImageLabeler = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [category, setCategory] = useState<string>('');
   const [subcategory, setSubcategory] = useState<string>('');
-  const [subsubcategory, setSubsubcategory] = useState<string>('');
+  const [customCategory, setCustomCategory] = useState<string>('');
+  const [customSubcategory, setCustomSubcategory] = useState<string>('');
+  const [localCategoriesData, setLocalCategoriesData] = useState(categoriesData);
+  const [zoomLevel, setZoomLevel] = useState(1);
 
-  const categoryOptions = getCategoryOptions(categoriesData);
-  const subcategoryOptions = getSubcategoryOptions(categoriesData, category);
-  const subsubcategoryOptions = getSubSubcategoryOptions(categoriesData, category, subcategory);
+  const categoryOptions = getCategoryOptions(localCategoriesData);
+  const subcategoryOptions = getSubcategoryOptions(localCategoriesData, category);
 
   // Reset dependent fields when parent category changes
   useEffect(() => {
     setSubcategory('');
-    setSubsubcategory('');
   }, [category]);
-
-  useEffect(() => {
-    setSubsubcategory('');
-  }, [subcategory]);
 
   // Load saved progress from localStorage
   useEffect(() => {
     const savedData = localStorage.getItem('imageLabelerData');
     if (savedData) {
-      const { images: savedImages, currentIndex: savedIndex } = JSON.parse(savedData);
+      const { images: savedImages, currentIndex: savedIndex, categoriesData: savedCategoriesData } = JSON.parse(savedData);
       setImages(savedImages);
       setCurrentIndex(savedIndex);
+      if (savedCategoriesData) {
+        setLocalCategoriesData(savedCategoriesData);
+      }
       if (savedImages[savedIndex]) {
         setCategory(savedImages[savedIndex].category || '');
         setSubcategory(savedImages[savedIndex].subcategory || '');
-        setSubsubcategory(savedImages[savedIndex].subsubcategory || '');
       }
     }
   }, []);
@@ -54,10 +52,11 @@ export const ImageLabeler = () => {
     if (images.length > 0) {
       localStorage.setItem('imageLabelerData', JSON.stringify({
         images,
-        currentIndex
+        currentIndex,
+        categoriesData: localCategoriesData
       }));
     }
-  }, [images, currentIndex]);
+  }, [images, currentIndex, localCategoriesData]);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -72,8 +71,7 @@ export const ImageLabeler = () => {
           file,
           url,
           category: '',
-          subcategory: '',
-          subsubcategory: ''
+          subcategory: ''
         });
       }
     }
@@ -82,13 +80,24 @@ export const ImageLabeler = () => {
     setCurrentIndex(0);
   };
 
+  const handleAddCustomCategory = () => {
+    if (!customCategory.trim()) return;
+    setLocalCategoriesData(addCustomCategory(localCategoriesData, customCategory.trim()));
+    setCustomCategory('');
+  };
+
+  const handleAddCustomSubcategory = () => {
+    if (!category || !customSubcategory.trim()) return;
+    setLocalCategoriesData(addCustomSubcategory(localCategoriesData, category, customSubcategory.trim()));
+    setCustomSubcategory('');
+  };
+
   const handleSave = () => {
     const updatedImages = [...images];
     updatedImages[currentIndex] = {
       ...updatedImages[currentIndex],
       category,
-      subcategory,
-      subsubcategory
+      subcategory
     };
     setImages(updatedImages);
   };
@@ -106,16 +115,14 @@ export const ImageLabeler = () => {
   const exportToCSV = () => {
     handleSave();
     const csvContent = [
-      ['image_name', 'category', 'subcategory', 'subsubcategory', 'json_format'],
+      ['image_name', 'category', 'subcategory', 'json_format'],
       ...images.map(img => [
         img.file.name,
         img.category,
         img.subcategory,
-        img.subsubcategory,
         JSON.stringify({
           category: img.category,
-          subcategory: img.subcategory,
-          subsubcategory: img.subsubcategory
+          subcategory: img.subcategory
         })
       ])
     ].map(row => row.join(',')).join('\n');
@@ -126,6 +133,23 @@ export const ImageLabeler = () => {
     link.download = 'image_labels.csv';
     link.click();
   };
+
+  const handleZoomIn = () => {
+    setZoomLevel(prev => Math.min(prev + 0.25, 3));
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel(prev => Math.max(prev - 0.25, 0.5));
+  };
+
+  const handleResetZoom = () => {
+    setZoomLevel(1);
+  };
+
+  // Reset zoom when changing images
+  useEffect(() => {
+    setZoomLevel(1);
+  }, [currentIndex]);
 
   const Select = ({ 
     value, 
@@ -188,38 +212,56 @@ export const ImageLabeler = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Category
             </label>
-            <Select
-              value={category}
-              onChange={setCategory}
-              options={categoryOptions}
-              placeholder="Select category"
-            />
+            <div className="flex gap-2">
+              <Select
+                value={category}
+                onChange={setCategory}
+                options={categoryOptions}
+                placeholder="Select category"
+              />
+              <div className="flex-shrink-0">
+                <button
+                  onClick={() => {
+                    const customCat = prompt('Enter new category name:');
+                    if (customCat?.trim()) {
+                      setLocalCategoriesData(addCustomCategory(localCategoriesData, customCat.trim()));
+                    }
+                  }}
+                  className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Subcategory
             </label>
-            <Select
-              value={subcategory}
-              onChange={setSubcategory}
-              options={subcategoryOptions}
-              placeholder="Select subcategory"
-              disabled={!category}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Sub-subcategory
-            </label>
-            <Select
-              value={subsubcategory}
-              onChange={setSubsubcategory}
-              options={subsubcategoryOptions}
-              placeholder="Select sub-subcategory"
-              disabled={!subcategory}
-            />
+            <div className="flex gap-2">
+              <Select
+                value={subcategory}
+                onChange={setSubcategory}
+                options={subcategoryOptions}
+                placeholder="Select subcategory"
+                disabled={!category}
+              />
+              <div className="flex-shrink-0">
+                <button
+                  onClick={() => {
+                    const customSubcat = prompt('Enter new subcategory name:');
+                    if (customSubcat?.trim() && category) {
+                      setLocalCategoriesData(addCustomSubcategory(localCategoriesData, category, customSubcat.trim()));
+                    }
+                  }}
+                  className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  disabled={!category}
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -263,18 +305,53 @@ export const ImageLabeler = () => {
       </div>
 
       {/* Right side - Image Preview */}
-      <div className="w-3/4 bg-white rounded-lg shadow p-4">
-        {images[currentIndex] ? (
-          <img
-            src={images[currentIndex].url}
-            alt={`Image ${currentIndex + 1}`}
-            className="w-full h-[calc(100vh-8rem)] object-contain rounded-lg"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-[calc(100vh-8rem)] bg-gray-50 rounded-lg">
-            <p className="text-gray-500 text-sm">No image selected</p>
-          </div>
-        )}
+      <div className="w-3/4 bg-white rounded-lg shadow p-4 flex flex-col">
+        {/* Zoom Controls */}
+        <div className="flex justify-end gap-2 mb-4">
+          <button
+            onClick={handleZoomOut}
+            className="p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+            title="Zoom Out"
+          >
+            <ZoomOut className="w-4 h-4 text-gray-600" />
+          </button>
+          <button
+            onClick={handleResetZoom}
+            className="p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+            title="Reset Zoom"
+          >
+            <RotateCcw className="w-4 h-4 text-gray-600" />
+          </button>
+          <button
+            onClick={handleZoomIn}
+            className="p-2 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+            title="Zoom In"
+          >
+            <ZoomIn className="w-4 h-4 text-gray-600" />
+          </button>
+        </div>
+
+        {/* Image Container */}
+        <div className="flex-grow relative overflow-auto">
+          {images[currentIndex] ? (
+            <div className="w-full h-[calc(100vh-12rem)] flex items-center justify-center">
+              <img
+                src={images[currentIndex].url}
+                alt={`Image ${currentIndex + 1}`}
+                className="object-contain transition-transform duration-200 ease-in-out"
+                style={{
+                  transform: `scale(${zoomLevel})`,
+                  maxWidth: '100%',
+                  maxHeight: '100%'
+                }}
+              />
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-[calc(100vh-12rem)] bg-gray-50 rounded-lg">
+              <p className="text-gray-500 text-sm">No image selected</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
