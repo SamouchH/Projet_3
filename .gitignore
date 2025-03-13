@@ -1,0 +1,8 @@
+projet_3_env/
+ocr_results/
+*.csv
+data/
+resultats_detection/
+images_folder/
+logo_folder/
+ocr_results/
