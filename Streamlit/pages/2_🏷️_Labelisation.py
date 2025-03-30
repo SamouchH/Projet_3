@@ -1,18 +1,26 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import plotly.express as px
-import plotly.graph_objects as go
-import plotly.io as pio
-import matplotlib.pyplot as plt
 
 st.set_page_config(
     page_title="Assistant vendeur",
     page_icon="👩‍💻",
 )
+url_labeler = "https://github.com/SamouchH/Projet_3/blob/labelling/README.md"
 
 st.subheader("Labelisation du set d'image")
 
-img_path = "/home/app/pages/Streamlit/labeller.jpg"
+st.markdown(
+        """
+    Avant d'entraîner nos modèles sur les images, nous avons d'abord procédé à une phase de **labellisation**.
+    Cette étape essentielle nous a permis de construire des **batchs d'entraînements équilibrés**, en nous assurant que chaque catégorie soit correctement représentée.
 
-st.image(img_path)
+    Pour cela, **Haroune** et **Armelle** ont utilisé un outil de labellisation d'image, conçu spécifiquement pour ce projet par Haroune.
+
+    Voici un aperçu de l’interface de l’application :
+    """
+    )
+
+img_path = "logos/labeller.jpg"
+st.image(img_path, caption="Interface du labeler d'images", use_container_width=True)
+
+st.markdown(f"👉 Vous pouvez tester l’outil vous-même en suivant ce lien : [Labeler GitHub]({url_labeler})")

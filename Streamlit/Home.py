@@ -10,7 +10,7 @@ def main():
     st.write("# Assistant de création d'annonce pour vendeur particulier")
     git_alex = ""
     git_armelle = "https://github.com/D41g0na"
-    git_haroune = ""
+    git_haroune = "https://github.com/SamouchH"
     git_jimmy = ""
     st.markdown(
         """
@@ -33,13 +33,6 @@ def main():
     st.write("[Jimmy](%s)" % git_jimmy)
     #- 📝 **OCR (Reconnaissance de Texte)** : extraction des **informations clés** à partir d'une image (étiquette, facture…).
     #- ✍ **Génération automatique de description** : proposition d'un **texte optimisé pour l'annonce**, basé sur les éléments extraits.
-
-    @st.cache_data
-    def load_data():
-        data = pd.read_csv("/home/app/pages/Streamlit/games_categories.csv")           
-        return data
-    if 'data' not in st.session_state:
-        st.session_state.data = load_data()
-
+        
 if __name__ == "__main__":
     main()

@@ -5,6 +5,10 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
 import matplotlib.pyplot as plt
+from pathlib import Path
+from utils import get_data, get_logo_path
+
+
 
 st.set_page_config(
     page_title="Assistant vendeur",
@@ -13,39 +17,58 @@ st.set_page_config(
 
 st.subheader("Analyse du set de données d'entrainement")
 
-if 'data' in st.session_state:
-    df = st.session_state.data
+df = get_data()
 
-    # Liste des catégories disponibles dans le DataFrame
-    categories_disponibles = df['category'].unique().tolist()
-    
-    # Ajout de l'option "Toutes" pour voir toutes les catégories
-    list_marque = ['Toutes'] + categories_disponibles  
+categories = df['category'].unique().tolist()
 
-    # Sélection de la catégorie avec un menu déroulant
-    selected_category = st.selectbox("Sélectionnez une catégorie :", list_marque)
+st.markdown("### Cliquez sur une catégorie :")
 
-    # Fonction pour générer le dataframe pour le treemap
-    def generate_plot(df):
-        return df.groupby(['category', 'subcategory']).size().reset_index(name='count')
+# Créer une grille de logos cliquables (4 par ligne)
+n_cols = 11
+rows = [categories[i:i + n_cols] for i in range(0, len(categories), n_cols)]
 
-    # Filtrer les données si une catégorie spécifique est sélectionnée
-    if selected_category == "Toutes":
-        df_marque = df  # Afficher toutes les catégories
+for row in rows:
+    cols = st.columns(len(row))
+    for col, cat in zip(cols, row):
+        logo_path = get_logo_path(cat)
+        if Path(logo_path).exists():
+            if col.button("", key=cat):
+                st.session_state["selected_category"] = cat
+            col.image(logo_path, use_container_width=True, caption=cat)
+        else:
+            col.warning(f"Logo manquant pour {cat}")
+
+
+
+# Ajout d'une option "Toutes"
+st.markdown("---")
+if st.button("Voir toutes les catégories"):
+    st.session_state["selected_category"] = "Toutes"
+
+# Récupération de la catégorie sélectionnée
+selected_category = st.session_state.get("selected_category", None)
+
+if selected_category:
+    st.markdown(f"### ✅ Catégorie sélectionnée : **{selected_category}**")
+
+    if selected_category != "Toutes":
+        df_marque = df[df['category'] == selected_category]
+        st.image(get_logo_path(selected_category), width=150)
     else:
-        df_marque = df[df['category'] == selected_category]  # Filtrer la sélection
+        df_marque = df
 
     # Génération des données pour le treemap
-    df_treemap = generate_plot(df_marque)
+    df_treemap = df_marque.groupby(['category', 'subcategory']).size().reset_index(name='count')
 
-    # Création du treemap avec Plotly
+    # Création du treemap
     fig = px.treemap(df_treemap, 
-                    path=['category', 'subcategory'],  # Hiérarchie Catégorie -> Sous-catégorie
+                    path=['category', 'subcategory'],
                     values='count',
                     color='category'
                     )
 
-    # Afficher le graphique dans Streamlit
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.info("Cliquez sur un logo pour afficher les données.")
 
 
