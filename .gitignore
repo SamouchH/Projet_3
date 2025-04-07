@@ -6,3 +6,31 @@ resultats_detection/
 images_folder/
 logo_folder/
 ocr_results/
+__pycache__/
+debug_detection/
+ocr_results_old/
+plots/
+
+
+
+# Ignorer tous les .py
+*.py
+
+# SAUF fichiers nécessaires
+!main.py
+!data_loader.py
+!config.py
+!global_config.py
+!improved_semantic_correction.py
+!utils.py
+!analysis.py
+!visualization.py
+!logo_loader.py
+!improved_logo_detection.py
+!cover_analysis.py
+!logo_detection.py
+!vectorizers.py
+!text_preprocessing.py
+!model_training_ml.py
+!model_training_dl.py
+

@@ -1,0 +1,16 @@
+C:\Users\Admin\Documents\GitHub\Projet_3\main.py
+C:\Users\Admin\Documents\GitHub\Projet_3\data_loader.py
+C:\Users\Admin\Documents\GitHub\Projet_3\main.py
+C:\Users\Admin\Documents\GitHub\Projet_3\config.py
+C:\Users\Admin\Documents\GitHub\Projet_3\global_config.py
+C:\Users\Admin\Documents\GitHub\Projet_3\improved_semantic_correction.py
+C:\Users\Admin\Documents\GitHub\Projet_3\utils.py
+C:\Users\Admin\Documents\GitHub\Projet_3\analysis.py
+C:\Users\Admin\Documents\GitHub\Projet_3\visualization.py
+C:\Users\Admin\Documents\GitHub\Projet_3\logo_loader.py
+C:\Users\Admin\Documents\GitHub\Projet_3\improved_logo_detection.py
+C:\Users\Admin\Documents\GitHub\Projet_3\cover_analysis.py
+C:\Users\Admin\Documents\GitHub\Projet_3\logo_detection.py
+C:\Users\Admin\Documents\GitHub\Projet_3\vectorizers.py
+C:\Users\Admin\Documents\GitHub\Projet_3\text_preprocessing.py
+C:\Users\Admin\Documents\GitHub\Projet_3\model_training_ml.py
