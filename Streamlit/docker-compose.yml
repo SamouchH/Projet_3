@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   rakuten-app:
     container_name: rakuten-container

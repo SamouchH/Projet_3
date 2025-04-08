@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+from openai import OpenAI
 
 @st.cache_data
 def load_data():
@@ -26,3 +27,21 @@ def get_logo_path(category):
         "Mobile Gaming": "logos/games.png"
     }
     return logos.get(category, "logos/default.png")
+
+
+client = OpenAI(
+    base_url="https://integrate.api.nvidia.com/v1",
+    api_key=st.secrets["NVIDIA_API_KEY"]
+)
+
+def generate_mistral_response(prompt, model="mistralai/mistral-7b-instruct-v0.2", temperature=0.7, max_tokens=300):
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=temperature,
+            max_tokens=max_tokens
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        return f"❌ Erreur : {e}"

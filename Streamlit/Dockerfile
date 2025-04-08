@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y libgl1
 COPY requirements.txt /dependencies/requirements.txt
 RUN pip install -r /dependencies/requirements.txt
 
-#COPY . .
+COPY . .
 
 EXPOSE 8501
 EXPOSE 4000

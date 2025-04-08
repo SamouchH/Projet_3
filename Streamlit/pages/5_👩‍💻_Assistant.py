@@ -1,9 +1,14 @@
 import streamlit as st
+import numpy as np
+from PIL import Image
+from utils import generate_mistral_response
+
 
 st.set_page_config(
     page_title="Assistant vendeur",
     page_icon="👩‍💻",
 )
+
 
 
 st.markdown(
@@ -26,7 +31,7 @@ if uploaded_file is not None:
     st.success("✅ Nouvelle image chargée avec succès !")
 
 if "image_raw" in st.session_state:
-    st.image(st.session_state["image_raw"], caption="Image d'origine", use_column_width=True)
+    st.image(st.session_state["image_raw"], caption="Image d'origine",  use_container_width=True)
 
     #Preprocessing d'image
     st.markdown("Pré-traitement utilisé: CLAHE & Sharpening")
@@ -42,15 +47,28 @@ else:
 pred_marque = st.session_state.get("pred_marque","Jeux Playstation")
 pred_platform = st.session_state.get("pred_platform","Playstation 4")
 
-with st.form('form'):
-    titre = st.text_input("Titre de l'annonce",value=pred_marque)
-    platform = st.text_input("Platform", value=pred_platform)
-    etat = st.selectbox(
-        "État du produit",
-        options=["Sous Blister", "Neuf", "Très bon état", "Bon état", "État satisfaisant"]
-    )
-    description = st.text_area("Desciption du produit", value="")
+titre = st.text_input("Titre de l'annonce",value="")
+platform = st.text_input("Platform", value=pred_platform)
+etat = st.selectbox(
+    "État du produit",["Sous Blister", "Neuf", "Très bon état", "Bon état", "État satisfaisant"])
+description = st.text_area("Desciption du produit (facultatif)", value="")
 
+if st.button("💡 Générer une description avec l'assistant IA"):
+    prompt = f"""
+    Tu es un assistant de rédaction d'annonce. Propose une description accrocheuse pour un jeu vidéo d'occasion.
+    
+    - Titre : {titre}
+    - Plateforme : {platform}
+    - État : {etat}
+    
+    Rédige un texte fluide en français, en peu de phrases, convaincant et clair. Le texte doit reprendre les informations fournit.
+    """
+    with st.spinner("L'IA rédige une description... ✍️"):
+        description = generate_mistral_response(prompt)
+        st.success("✅ Description générée !")
+
+with st.form('formulaire_annonce'):
+    st.text_area("Proposition d'annonce:", value=description, height=200, key="final_desc")
     submit = st.form_submit_button("Valider l'annonce")
 
 if submit:
@@ -58,5 +76,5 @@ if submit:
     st.write("**Titre:**", titre)
     st.write("**Platforme:**", platform)
     st.write("**État:**", etat)
-    st.write("**Description:**", description)
+    st.write("**Description:**", st.session_state["final_desc"])
 

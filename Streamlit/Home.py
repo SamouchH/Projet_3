@@ -8,10 +8,10 @@ st.set_page_config(
 
 def main():
     st.write("# Assistant de création d'annonce pour vendeur particulier")
-    git_alex = ""
+    git_alex = "https://github.com/alexdhn1"
     git_armelle = "https://github.com/D41g0na"
     git_haroune = "https://github.com/SamouchH"
-    git_jimmy = ""
+    git_jimmy = "https://github.com/JimmyRata"
     st.markdown(
         """
     Ce projet s'inscrit dans le cadre de notre **année de Master**, avec pour objectif de **faciliter la création d'annonces pour les vendeurs particuliers**.
