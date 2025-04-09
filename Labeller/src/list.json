@@ -1,0 +1,79 @@
+{
+  "CATEGORIES": {
+    "Jeux vidéo, console": {
+      "PlayStation": [
+        "Jeux PS5",
+        "Jeux PS4",
+        "Jeux PS4 en précommande",
+        "Jeux PS5 en précommande",
+        "Jeux PS VR",
+        "Jeux PS VR2",
+        "Jeux PS3",
+        "Jeux PS2",
+        "Jeux PS1"
+      ],
+      "Xbox": [
+        "Jeux Xbox Series",
+        "Jeux Xbox One",
+        "Jeux Xbox Series en précommande",
+        "Jeux Xbox One en précommande",
+        "Jeux Xbox 360",
+        "Jeux Xbox Classic"
+      ],
+      "Nintendo": [
+        "Jeux Nintendo Switch",
+        "Jeux Nintendo Switch en précommande",
+        "Jeux Nintendo DS",
+        "Jeux Nintendo 3DS",
+        "Jeux Nintendo Wii",
+        "Jeux Nintendo Wii U",
+        "Jeux Game Boy",
+        "Jeux Game Boy Advance",
+        "Jeux Game Boy Color"
+      ],
+      "PC Gaming": [
+        "Jeux PC",
+        "PC à télécharger",
+        "DLC / Extensions",
+        "Jeux PC en précommande",
+        "Jeux PC MMO",
+        "Jeux PC Stratégie",
+        "Jeux PC Action",
+        "Jeux PC RPG"
+      ],
+      "Réalité Virtuelle": [
+        "Jeux Oculus Quest",
+        "Jeux Oculus Rift",
+        "Jeux HTC Vive",
+        "Jeux Windows Mixed Reality",
+        "Jeux PS VR",
+        "Jeux PS VR2",
+        "Jeux VR PC"
+      ],
+      "Retro Gaming": [
+        "Jeux SEGA",
+        "Jeux Neo Geo",
+        "Jeux Atari",
+        "Jeux Commodore",
+        "Jeux Arcade",
+        "Jeux MSX"
+      ],
+      "Mobile Gaming": [
+        "Jeux Android",
+        "Jeux iOS",
+        "Jeux Windows Phone"
+      ],
+      "Autre": [
+        "Non catégorisé",
+        "Jeux non identifiés",
+        "Autres plateformes"
+      ],
+      "Outlier": [
+        "Image incorrecte",
+        "Image corrompue",
+        "Non pertinent",
+        "Doublon"
+      ]
+    }
+  }
+}

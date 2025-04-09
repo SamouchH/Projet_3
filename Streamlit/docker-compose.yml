@@ -1,4 +1,4 @@
-services:
+services:  
   rakuten-app:
     container_name: rakuten-container
     build:

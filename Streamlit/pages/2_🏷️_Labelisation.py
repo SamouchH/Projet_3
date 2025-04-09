@@ -5,7 +5,8 @@ st.set_page_config(
     page_title="Assistant vendeur",
     page_icon="👩‍💻",
 )
-url_labeler = "https://github.com/SamouchH/Projet_3/blob/labelling/README.md"
+#url_labeler = "https://github.com/SamouchH/Projet_3/blob/labelling/README.md"
+url_labeler = "http://localhost:5173"
 
 st.subheader("Labelisation du set d'image")
 
@@ -23,4 +24,5 @@ st.markdown(
 img_path = "logos/labeller.jpg"
 st.image(img_path, caption="Interface du labeler d'images", use_container_width=True)
 
-st.markdown(f"👉 Vous pouvez tester l’outil vous-même en suivant ce lien : [Labeler GitHub]({url_labeler})")
+st.markdown(f"[Ouvrir le labeller dans une nouvelle fenêtre]({url_labeler})", unsafe_allow_html=True)
+

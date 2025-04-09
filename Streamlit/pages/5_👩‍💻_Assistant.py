@@ -9,7 +9,9 @@ st.set_page_config(
     page_icon="👩‍💻",
 )
 
-
+# Initialisation de la clé "final_desc" dans session_state si elle n'existe pas
+if "final_desc" not in st.session_state:
+    st.session_state["final_desc"] = ""
 
 st.markdown(
     """
@@ -65,10 +67,11 @@ if st.button("💡 Générer une description avec l'assistant IA"):
     """
     with st.spinner("L'IA rédige une description... ✍️"):
         description = generate_mistral_response(prompt)
+        st.session_state["final_desc"] = description
         st.success("✅ Description générée !")
 
 with st.form('formulaire_annonce'):
-    st.text_area("Proposition d'annonce:", value=description, height=200, key="final_desc")
+    st.text_area("Proposition d'annonce:", height=200, key="final_desc")
     submit = st.form_submit_button("Valider l'annonce")
 
 if submit:
