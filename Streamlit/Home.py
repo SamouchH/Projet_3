@@ -20,6 +20,7 @@ def main():
     Notre solution propose **un assistant intelligent**, capable de **préremplir automatiquement la fiche produit**, en s’appuyant sur :
 
     - 📷 **Analyse d’images** : identification automatique de la **catégorie du produit** pour un gain de temps.
+    - ✍ **Génération automatique de description** : proposition d'un **texte optimisé pour l'annonce**, basé sur les éléments extraits.
 
     Grâce à cette application, la création d’annonces devient **plus rapide, plus efficace et plus intuitive**.
 
@@ -32,7 +33,7 @@ def main():
     st.write("[Haroune](%s)" % git_haroune )
     st.write("[Jimmy](%s)" % git_jimmy)
     #- 📝 **OCR (Reconnaissance de Texte)** : extraction des **informations clés** à partir d'une image (étiquette, facture…).
-    #- ✍ **Génération automatique de description** : proposition d'un **texte optimisé pour l'annonce**, basé sur les éléments extraits.
+
         
 if __name__ == "__main__":
     main()

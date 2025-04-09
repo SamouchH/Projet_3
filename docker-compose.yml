@@ -1,0 +1,89 @@
+services:
+  # Streamlit application
+  streamlit:
+    build:
+      context: ./Streamlit
+      dockerfile: Dockerfile
+    container_name: projet3-streamlit
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./Streamlit:/home/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "app.description=Streamlit Web Interface"
+    networks:
+      - app-network
+
+  # React frontend for the labeling application
+  labeling-frontend:
+    build:
+      context: ./Labeller
+      dockerfile: Dockerfile
+    container_name: projet3-labeling-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./Labeller:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:8000
+    restart: unless-stopped
+    depends_on:
+      - labeling-api
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5173"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "app.description=React Image Labeling Frontend"
+    networks:
+      - app-network
+
+  # FastAPI backend for the labeling application
+  labeling-api:
+    build:
+      context: ./Labeller
+      dockerfile: Dockerfile.api
+    container_name: projet3-labeling-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./Labeller:/app
+      - ./Labeller/uploaded_images:/app/uploaded_images
+      - ./Labeller/labels:/app/labels
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DEBUG=1
+      - PORT=8000
+      - HOST=0.0.0.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    labels:
+      - "app.description=FastAPI Backend for Labeling"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    name: projet3-network
+    driver: bridge
+
+volumes:
+  node_modules: 

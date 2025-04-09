@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 from openai import OpenAI
+import os
 
 @st.cache_data
 def load_data():
@@ -45,3 +46,12 @@ def generate_mistral_response(prompt, model="mistralai/mistral-7b-instruct-v0.2"
         return response.choices[0].message.content.strip()
     except Exception as e:
         return f"❌ Erreur : {e}"
+
+# Helper function to get the labeling platform directory
+def get_labeling_dir():
+    # Get the current Streamlit script directory
+    current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Get the parent directory (project root)
+    project_root = os.path.dirname(current_dir)
+    # The labeling platform directory
+    return os.path.join(project_root, "Labeller")
