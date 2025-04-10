@@ -12,3 +12,4 @@ opencv-python==4.11.0.86
 
 # LLM
 openai==1.71.0
+anthropic==0.49.0
