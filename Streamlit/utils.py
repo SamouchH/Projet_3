@@ -4,6 +4,7 @@ from openai import OpenAI
 import os
 from tensorflow.keras.models import load_model as tf_load_model
 import numpy as np
+from PIL import Image
 
 # Chargement csv pour EDA
 @st.cache_data
@@ -69,10 +70,10 @@ def load_model(model_path="modele_cnn_transfer.h5"):
     model = tf_load_model(model_path)
     return model
 
-def predict(model, image_array, cat_mapping=None):
-    image = image_array / 255.0
+def predict(model, image_array, cat_mapping=category_labels):
+    image = Image.fromarray(image_array).resize((150, 150))
+    image = np.array(image) / 255.0
     image = np.expand_dims(image, axis=0)
     prediction = model.predict(image)
     pred_index = np.argmax(prediction, axis=1)[0]
-    category = cat_mapping[pred_index] if cat_mapping else pred_index
-    return category
+    return cat_mapping[pred_index]

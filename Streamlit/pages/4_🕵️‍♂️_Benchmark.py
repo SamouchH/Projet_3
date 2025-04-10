@@ -99,9 +99,11 @@ Précision : 0.5858
     img_path = "logos/MNV2_ft.png"
     st.image(img_path, caption="Matrice de confusion MobileNet v2 fine tune", width=400)
 
-        st.markdown(
+    st.markdown(
         """
-Jimmy a entraîné un grad cam afon d'observer les zones reconnu par le modèle et nous pouvons constater que les zones ne sont pas les zones informatives qui nous intéresse.
+Jimmy a entraîné un **Grad-CAM** afin d'observer les zones activées par le modèle lors de la prédiction.  
+Nous pouvons constater que ces zones ne correspondent pas toujours aux éléments informatifs attendus, comme les logos ou le texte présents sur l'image.
+    
     """)
     col1,col2 = st.columns(2)
     with col1:

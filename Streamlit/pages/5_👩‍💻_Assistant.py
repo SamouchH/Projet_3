@@ -42,8 +42,7 @@ if "image_raw" in st.session_state:
 
     #Model
     if st.button('Lancer la catégorisation'):
-        pred_index = predict(model, st.session_state["image_raw"])
-        pred_category = CATEGORY_LABELS[pred_index]
+        pred_category = predict(model, st.session_state["image_raw"])
         st.session_state["pred_marque"] = pred_category
         st.success(f"✅ Catégorie prédite : **{pred_category}**")
 
@@ -54,9 +53,9 @@ else:
 #pred_marque = st.session_state.get("pred_marque","Jeux Playstation")
 # pred_platform = st.session_state.get("pred_platform","Playstation 4")
 
-
+default_platform = st.session_state.get("pred_marque", "")
 titre = st.text_input("Titre de l'annonce",value="")
-platform = st.text_input("Platform", value=pred_marque)
+platform = st.text_input("Platform", value=default_platform)
 etat = st.selectbox(
     "État du produit",["Sous Blister", "Neuf", "Très bon état", "Bon état", "État satisfaisant"])
 description = st.text_area("Desciption du produit (facultatif)", value="")
