@@ -98,3 +98,16 @@ Précision : 0.5858
     """)
     img_path = "logos/MNV2_ft.png"
     st.image(img_path, caption="Matrice de confusion MobileNet v2 fine tune", width=400)
+
+        st.markdown(
+        """
+Jimmy a entraîné un grad cam afon d'observer les zones reconnu par le modèle et nous pouvons constater que les zones ne sont pas les zones informatives qui nous intéresse.
+    """)
+    col1,col2 = st.columns(2)
+    with col1:
+        img_path = "logos/grad_cam1.png"
+        st.image(img_path, caption="Grad cam sur une cartouche GameBoy", width=400)
+
+    with col2:
+        img_path = "logos/grad_cam2.png"
+        st.image(img_path, caption="Grad cam sur le jeu Sims", width=400)

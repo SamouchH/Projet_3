@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 from PIL import Image
-from utils import generate_mistral_response
+from utils import generate_mistral_response, load_model, predict, category_labels
 
 
 st.set_page_config(
@@ -32,25 +32,31 @@ if uploaded_file is not None:
     st.session_state["image_raw"] = np.array(image)
     st.success("✅ Nouvelle image chargée avec succès !")
 
+# Chargement du modèle
+model = load_model()
 if "image_raw" in st.session_state:
     st.image(st.session_state["image_raw"], caption="Image d'origine",  use_container_width=True)
 
     #Preprocessing d'image
-    st.markdown("Pré-traitement utilisé: CLAHE & Sharpening")
+    #st.markdown("Pré-traitement utilisé: CLAHE & Sharpening")
 
     #Model
     if st.button('Lancer la catégorisation'):
-        st.info('Modèle ici')
+        pred_index = predict(model, st.session_state["image_raw"])
+        pred_category = CATEGORY_LABELS[pred_index]
+        st.session_state["pred_marque"] = pred_category
+        st.success(f"✅ Catégorie prédite : **{pred_category}**")
 
 else:
     st.info("Aucune image disponible pour le moment.")
 
 #Valeur d'essai
-pred_marque = st.session_state.get("pred_marque","Jeux Playstation")
-pred_platform = st.session_state.get("pred_platform","Playstation 4")
+#pred_marque = st.session_state.get("pred_marque","Jeux Playstation")
+# pred_platform = st.session_state.get("pred_platform","Playstation 4")
+
 
 titre = st.text_input("Titre de l'annonce",value="")
-platform = st.text_input("Platform", value=pred_platform)
+platform = st.text_input("Platform", value=pred_marque)
 etat = st.selectbox(
     "État du produit",["Sous Blister", "Neuf", "Très bon état", "Bon état", "État satisfaisant"])
 description = st.text_area("Desciption du produit (facultatif)", value="")
