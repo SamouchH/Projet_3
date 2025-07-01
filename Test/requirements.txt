@@ -1,0 +1,7 @@
+pytest
+numpy
+pandas
+streamlit
+openai
+tensorflow
+Pillow

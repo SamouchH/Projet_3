@@ -80,6 +80,20 @@ services:
     networks:
       - app-network
 
+  # Service de test unitaire
+  test:
+    build:
+      context: ./Test
+      dockerfile: Dockerfile
+    container_name: projet3-test_app
+    volumes:
+      - .:/home/app
+      - ./Streamlit/.streamlit:/home/app/.streamlit
+    working_dir: /home/app
+    command: ["pytest"]
+    networks:
+      - app-network
+
 networks:
   app-network:
     name: projet3-network
@@ -87,3 +101,4 @@ networks:
 
 volumes:
   node_modules: 
+
