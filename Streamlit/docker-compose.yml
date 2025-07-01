@@ -1,0 +1,14 @@
+services:  
+  rakuten-app:
+    container_name: rakuten-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/home/app
+    ports:
+      - "8501:8501"  
+      - "4000:4000"  
+    environment:
+      - PORT=4000
+    command: streamlit run Home.py --server.port=8501 --server.address=0.0.0.0 --server.runOnSave=true

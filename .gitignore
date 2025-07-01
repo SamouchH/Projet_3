@@ -1,0 +1,11 @@
+#Fichier sensible
+Streamlit/.streamlit/secrets.toml
+
+#Cache Python
+__pycache__/
+*.py[cod]
+
+#Environnement
+.venv
+pyproject.toml
+poetry.lock

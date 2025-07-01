@@ -1,0 +1,15 @@
+#Librairies de base
+streamlit==1.44.1
+matplotlib==3.10.1
+numpy==1.23.5
+plotly==6.0.1
+pandas==2.2.3
+tensorflow==2.12.0
+
+#Image processing
+pillow==11.1.0
+opencv-python==4.11.0.86
+
+# LLM
+openai==1.71.0
+anthropic==0.49.0
