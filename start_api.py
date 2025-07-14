@@ -20,14 +20,14 @@ def print_banner():
 ╔══════════════════════════════════════════════════════════════╗
 ║                        🎮 PROJET_3 API                      ║  
 ║                                                              ║
-║  API de Classification d'Images de Jeux Vidéo               ║
-║  Version: 1.0.0                                             ║
+║  API de Classification d'Images de Jeux Vidéo                ║
+║  Version: 1.0.0                                              ║
 ║                                                              ║
-║  Fonctionnalités:                                           ║
+║  Fonctionnalités:                                            ║
 ║  • 🔐 Authentification JWT sécurisée                        ║
 ║  • 🎯 Classification automatique d'images                   ║
 ║  • 📊 Dashboard d'administration                            ║
-║  • 🛡️ Sécurité et rate limiting                            ║
+║  • 🛡️ Sécurité et rate limiting                              ║
 ║  • 📈 Monitoring et métriques                               ║
 ╚══════════════════════════════════════════════════════════════╝
     """

@@ -68,26 +68,57 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = True
-        
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        
+
+    def setup_dirs(self):
         # Création des répertoires nécessaires
         Path(self.UPLOAD_DIR).mkdir(exist_ok=True)
         Path(self.PREDICTIONS_DIR).mkdir(exist_ok=True)
         
+    # def __init__(self, **kwargs):
+    #     super().__init__(**kwargs)
+
+        # # Création des répertoires nécessaires
+        # Path(self.UPLOAD_DIR).mkdir(exist_ok=True)
+        # Path(self.PREDICTIONS_DIR).mkdir(exist_ok=True)
+
+        
         # Récupération des clés d'API depuis l'environnement
-        self.NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY")
-        self.ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+        # self.NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY")
+        # self.ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
         
         # Configuration pour la production
-        if os.getenv("ENVIRONMENT") == "production":
-            self.DEBUG = False
-            self.SECRET_KEY = os.getenv("SECRET_KEY", self.SECRET_KEY)
-            self.DATABASE_URL = os.getenv("DATABASE_URL", self.DATABASE_URL)
+        # if os.getenv("ENVIRONMENT") == "production":
+        #     self.DEBUG = False
+        #     self.SECRET_KEY = os.getenv("SECRET_KEY", self.SECRET_KEY)
+        #     self.DATABASE_URL = os.getenv("DATABASE_URL", self.DATABASE_URL)
+
+class ProductionConfig(Settings):
+    DEBUG: bool = False
+
+class TestConfig(Settings):
+    DEBUG: bool = True
+    DATABASE_URL: str = "sqlite:///./test_projet3_api.db"
+    ALLOWED_HOSTS: List[str] = ["*"]
+
+def get_settings() -> Settings:
+    env = os.getenv("ENVIRONMENT", "production").lower()
+    settings = TestConfig() if env == 'test' else ProductionConfig()
+    settings.setup_dirs()
+    return settings
+
+
+        # env = os.getenv("ENVIRONMENT", "production")
+
+        # if env == "production":
+        #     self.DEBUG = False
+        #     self.SECRET_KEY = os.getenv("SECRET_KEY", self.SECRET_KEY)
+        #     self.DATABASE_URL = os.getenv("DATABASE_URL", self.DATABASE_URL)
+        
+        # elif env == "test":
+        #     self.ALLOWED_HOSTS = ["*"]
 
 # Instance globale des paramètres
-settings = Settings()
+settings = get_settings()
 
 # Validation des paramètres critiques
 def validate_settings():

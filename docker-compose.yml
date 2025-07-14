@@ -18,67 +18,9 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    labels:
-      - "app.description=Streamlit Web Interface"
     networks:
-      - app-network
-
-  # React frontend for the labeling application
-  labeling-frontend:
-    build:
-      context: ./Labeller
-      dockerfile: Dockerfile
-    container_name: projet3-labeling-frontend
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./Labeller:/app
-      - /app/node_modules
-    environment:
-      - NODE_ENV=development
-      - VITE_API_URL=http://localhost:8000
-    restart: unless-stopped
-    depends_on:
-      - labeling-api
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5173"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    labels:
-      - "app.description=React Image Labeling Frontend"
-    networks:
-      - app-network
-
-  # FastAPI backend for the labeling application
-  labeling-api:
-    build:
-      context: ./Labeller
-      dockerfile: Dockerfile.api
-    container_name: projet3-labeling-api
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./Labeller:/app
-      - ./Labeller/uploaded_images:/app/uploaded_images
-      - ./Labeller/labels:/app/labels
-    environment:
-      - PYTHONUNBUFFERED=1
-      - DEBUG=1
-      - PORT=8000
-      - HOST=0.0.0.0
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 15s
-    labels:
-      - "app.description=FastAPI Backend for Labeling"
-    networks:
-      - app-network
+      #- app-network
+      - projet3_network
 
   # Service de test unitaire
   test:
@@ -91,14 +33,116 @@ services:
       - ./Streamlit/.streamlit:/home/app/.streamlit
     working_dir: /home/app
     command: ["pytest"]
+    environment:
+      - ENVIRONMENT=test
     networks:
-      - app-network
+      #- app-network
+      - projet3_network
 
-networks:
-  app-network:
-    name: projet3-network
-    driver: bridge
+  # API principale
+  api:    
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: projet3_api
+    ports:
+      - "8080:8080"
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=sqlite:///./data/projet3_api.db
+      - SECRET_KEY=${SECRET_KEY:-your-super-secret-key-change-this}
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+      - ./predictions:/app/predictions
+      #- ../Streamlit/modele_cnn_transfer.h5:/app/modele_cnn_transfer.h5:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - projet3_network
+
+  # Base de données PostgreSQL (optionnelle)
+  postgres:
+    image: postgres:15-alpine
+    container_name: projet3_postgres
+    environment:
+      - POSTGRES_DB=projet3_api
+      - POSTGRES_USER=projet3_user
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-changeme}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - projet3_network
+
+  # Redis pour le cache et rate limiting
+  redis:
+    image: redis:7-alpine
+    container_name: projet3_redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-changeme}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - projet3_network
+
+  # Monitoring avec Prometheus (optionnel)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: projet3_prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      # - '--web.console.libraries=/etc/prometheus/console_libraries'
+      # - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    networks:
+      - projet3_network
+
+  # Interface de monitoring avec Grafana (optionnel)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: projet3_grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - projet3_network
+
 
 volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
   node_modules: 
+
+networks:
+  # app-network:
+  #   name: projet3-network
+  projet3_network:
+    driver: bridge
 

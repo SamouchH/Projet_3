@@ -9,8 +9,8 @@ from PIL import Image
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
-from ..core.config import settings
-from ..core.models import PredictionResult, PredictionResponse, PredictionStatus
+from core.config import settings
+from core.models import PredictionResult, PredictionResponse, PredictionStatus
 
 logger = logging.getLogger(__name__)
 

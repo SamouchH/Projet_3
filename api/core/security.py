@@ -7,6 +7,7 @@ from jose import JWTError, jwt
 import hashlib
 import secrets
 import logging
+from typing import List
 
 from .config import settings
 from .models import TokenData, UserRole

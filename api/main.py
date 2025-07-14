@@ -10,14 +10,14 @@ from typing import Optional, List, Dict, Any
 import os
 from datetime import datetime
 
-from .core.config import settings
-from .core.security import verify_token, get_current_user, get_current_admin_user
-from .core.models import PredictionResponse, UserResponse, LoginRequest, StatsResponse
-from .services.prediction_service import PredictionService
-from .services.user_service import UserService
-from .core.database import init_db
-from .core.middleware import RateLimitMiddleware
-from .core.logging_config import setup_logging
+from core.config import get_settings
+from core.security import verify_token, get_current_user, get_current_admin_user
+from core.models import PredictionResponse, UserResponse, LoginRequest, StatsResponse
+from services.prediction_service import PredictionService
+from services.user_service import UserService
+from core.database import init_db
+from core.middleware import RateLimitMiddleware
+from core.logging_config import setup_logging
 
 # Configuration du logging
 setup_logging()
@@ -68,6 +68,8 @@ app = FastAPI(
 )
 
 # Configuration des middlewares de sécurité
+settings = get_settings()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
