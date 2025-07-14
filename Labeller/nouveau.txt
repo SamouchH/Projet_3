@@ -1,1 +1,0 @@
-créer un dossier .github et workflows pour mettre deploy.yml dedans

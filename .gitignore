@@ -4,8 +4,10 @@ Streamlit/.streamlit/secrets.toml
 #Cache Python
 __pycache__/
 *.py[cod]
+logs/
 
 #Environnement
 .venv
 pyproject.toml
 poetry.lock
+.env

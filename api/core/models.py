@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 from enum import Enum
@@ -59,6 +59,15 @@ class PredictionRequest(BaseModel):
     filename: Optional[str] = None
     include_confidence: bool = True
     include_alternatives: bool = False
+
+    @field_validator("filename")
+    @classmethod
+    def validate_filename(cls, v:Optional[str]) -> Optional[str]:
+        if v:
+            v = v.strip()
+            if not v.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
+                raise ValueError('Format de fichier non supporté')
+        return v
 
 class PredictionResult(BaseModel):
     category: str
@@ -144,15 +153,15 @@ class ValidationError(BaseModel):
     message: str
     value: Any
 
-# Validateurs personnalisés
-class PredictionRequestValidator(BaseModel):
-    """Validateur pour les requêtes de prédiction"""
+# # Validateurs personnalisés
+# class PredictionRequestValidator(BaseModel):
+#     """Validateur pour les requêtes de prédiction"""
     
-    @validator('filename')
-    def validate_filename(cls, v):
-        if v and not v.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
-            raise ValueError('Format de fichier non supporté')
-        return v
+#     @validator('filename')
+#     def validate_filename(cls, v):
+#         if v and not v.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
+#             raise ValueError('Format de fichier non supporté')
+#         return v
 
 # Modèles de réponse API standardisés
 class APIResponse(BaseModel):

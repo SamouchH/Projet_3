@@ -1,7 +1,10 @@
 import pytest
 from Streamlit.utils import get_logo_path, get_labeling_dir, predict
 import numpy as np
+from pathlib import Path
 
+def test_streamlit_file_exists():
+    assert Path("Streamlit/Home.py").exists(), "Le fichier Streamlit/Home.py est introuvable."
 def test_get_logo_path():
     assert get_logo_path("PlayStation") == "logos/PlayStation.png"
 

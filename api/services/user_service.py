@@ -3,9 +3,9 @@ from datetime import datetime
 from typing import Optional, List, Dict, Any
 from sqlalchemy.orm import Session
 
-from ..core.security import hash_password, verify_password, create_tokens, login_attempt_manager
-from ..core.models import UserRole, UserCreate, UserResponse
-from ..core.database import get_db
+from core.security import hash_password, verify_password, create_tokens, login_attempt_manager
+from core.models import UserRole, UserCreate, UserResponse
+from core.database import get_db
 
 logger = logging.getLogger(__name__)
 
