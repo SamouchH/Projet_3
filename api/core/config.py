@@ -68,6 +68,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = True
+        extra ="ignore"
 
     def setup_dirs(self):
         # Création des répertoires nécessaires
@@ -99,6 +100,8 @@ class TestConfig(Settings):
     DEBUG: bool = True
     DATABASE_URL: str = "sqlite:///./test_projet3_api.db"
     ALLOWED_HOSTS: List[str] = ["*"]
+    ENVIRONMENT: str = "test"
+    LOAD_MODEL: bool = True
 
 def get_settings() -> Settings:
     env = os.getenv("ENVIRONMENT", "production").lower()

@@ -19,7 +19,6 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      #- app-network
       - projet3_network
 
   # Service de test unitaire
@@ -35,8 +34,8 @@ services:
     command: ["pytest"]
     environment:
       - ENVIRONMENT=test
+      - PYTHONPATH=/home/app/api
     networks:
-      #- app-network
       - projet3_network
 
   # API principale
@@ -48,18 +47,22 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - ENVIRONMENT=production
+      #- ENVIRONMENT=production
+      - ENVIRONMENT=test
+      #- PYTHONPATH=/home/app:/home/app/api
+      - PYTHONPATH=/app
       - DATABASE_URL=sqlite:///./data/projet3_api.db
       - SECRET_KEY=${SECRET_KEY:-your-super-secret-key-change-this}
       - NVIDIA_API_KEY=${NVIDIA_API_KEY}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - LOG_LEVEL=INFO
     volumes:
+      - ./api:/app
       - ./data:/app/data
       - ./logs:/app/logs
       - ./uploads:/app/uploads
       - ./predictions:/app/predictions
-      #- ../Streamlit/modele_cnn_transfer.h5:/app/modele_cnn_transfer.h5:ro
+      #- ./api/modele_cnn_transfer.h5:/app/modele_cnn_transfer.h5:ro
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
@@ -141,8 +144,6 @@ volumes:
   node_modules: 
 
 networks:
-  # app-network:
-  #   name: projet3-network
   projet3_network:
     driver: bridge
 

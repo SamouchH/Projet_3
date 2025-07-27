@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Schéma de sécurité Bearer
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)
 
 class SecurityService:
     """Service de sécurité pour l'authentification et l'autorisation"""
@@ -119,11 +119,18 @@ def verify_token(token: str) -> TokenData:
 
 # Dépendances FastAPI pour l'authentification
 async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)
 ) -> Dict[str, Any]:
     """
     Dépendance pour obtenir l'utilisateur actuel depuis le token JWT
     """
+    if credentials is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentification recquise",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
     try:
         token_data = verify_token(credentials.credentials)
         
@@ -151,10 +158,19 @@ async def get_current_admin_user(
     """
     Dépendance pour vérifier que l'utilisateur actuel est administrateur
     """
+    
+    if current_user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authetification recquise",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
     if current_user.get("role") != UserRole.ADMIN:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Droits administrateur requis"
+            detail="Droits administrateur requis",
+            headers={"WWW-Authenticate": "Bearer"},
         )
     
     return current_user
