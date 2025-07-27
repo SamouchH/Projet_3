@@ -2,26 +2,44 @@ from fastapi import FastAPI, HTTPException, Depends, status, UploadFile, File, R
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from contextlib import asynccontextmanager
 import logging
 import time
 from typing import Optional, List, Dict, Any
 import os
 from datetime import datetime
+import sys
+from PIL import Image
+import io
 
 from core.config import get_settings
 from core.security import verify_token, get_current_user, get_current_admin_user
-from core.models import PredictionResponse, UserResponse, LoginRequest, StatsResponse
+from core.models import PredictionResponse, UserResponse, LoginRequest, StatsResponse, UserCreate
 from services.prediction_service import PredictionService
 from services.user_service import UserService
 from core.database import init_db
 from core.middleware import RateLimitMiddleware
 from core.logging_config import setup_logging
 
+
 # Configuration du logging
 setup_logging()
+
+# Ajout console stdout pour que les logs soient visibles dans Docker
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setLevel(logging.getLevelName(os.getenv("LOG_LEVEL", "INFO")))
+formatter = logging.Formatter("🌟 [%(asctime)s] %(levelname)s in %(name)s: %(message)s")
+console_handler.setFormatter(formatter)
+logging.getLogger().addHandler(console_handler)
+
 logger = logging.getLogger(__name__)
+logger.info("main bien chargé")
+
+# Initialisation des settings
+settings = get_settings()
+logger.info(f"ENV: {os.environ.get('ENVIRONMENT')}")
+logger.info(f"ALLOWED_HOSTS: {settings.ALLOWED_HOSTS}")
 
 # Initialisation de la base de données et des services
 @asynccontextmanager
@@ -66,6 +84,14 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc"
 )
+
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    response: Response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    return response
 
 # Configuration des middlewares de sécurité
 settings = get_settings()
@@ -136,17 +162,18 @@ async def login(
 
 @app.post("/auth/register", response_model=UserResponse, tags=["Authentication"])
 async def register(
-    user_data: Dict[str, str],
+    user_data: UserCreate,
     user_service: UserService = Depends(lambda: app.state.user_service)
 ):
     """Inscription d'un nouvel utilisateur"""
     try:
         user = await user_service.create_user(
-            username=user_data["username"],
-            email=user_data["email"],
-            password=user_data["password"]
+            username=user_data.username,
+            email=user_data.email,
+            password=user_data.password,
+            role=user_data.role
         )
-        logger.info(f"Nouvel utilisateur créé : {user_data['username']}")
+        logger.info(f"Nouvel utilisateur créé : {user_data.username}")
         return user
     except Exception as e:
         logger.error(f"Erreur lors de la création de l'utilisateur : {str(e)}")
@@ -178,12 +205,25 @@ async def predict_image(
         
         # Lecture et traitement de l'image
         image_bytes = await file.read()
+
+        # tentatice de lecture avec PIL(détection image invalide)
+        try:
+            image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+        except Exception as e:
+            logger.warning(f"Image invalide: {str(e)}")
+            raise HTTPException(
+                status_code=400,
+                detail="Fichier image invalide ou non lisible"
+            )
         
         # Prédiction
         result = await prediction_service.predict_image(image_bytes, current_user["user_id"])
         
         logger.info(f"Prédiction réalisée par {current_user['username']}: {result['prediction']}")
         return result
+
+    except HTTPException as http_err:
+        raise http_err
         
     except Exception as e:
         logger.error(f"Erreur lors de la prédiction : {str(e)}")

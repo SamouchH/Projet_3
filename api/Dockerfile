@@ -35,7 +35,7 @@ RUN mkdir -p logs uploads predictions && \
     chown -R app:app /app
 
 # Changement vers l'utilisateur non-root
-USER app
+#USER app
 
 # Exposition du port
 EXPOSE 8080
@@ -45,4 +45,5 @@ ENV ENVIRONMENT=production \
     LOG_LEVEL=INFO
 
 # Commande par défaut
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "4"] 
+#CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "4"] 
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1"] 
