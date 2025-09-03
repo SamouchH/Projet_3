@@ -25,10 +25,10 @@ graph TB
         end
 
         subgraph "API Endpoints"
-            AUTH_EP[/auth/* endpoints]
-            PRED_EP[/predict/* endpoints]
-            ADMIN_EP[/admin/* endpoints]
-            HEALTH_EP[/health endpoint]
+            AUTH_EP[Auth Endpoints]
+            PRED_EP[Predict Endpoints]
+            ADMIN_EP[Admin Endpoints]
+            HEALTH_EP[Health Endpoint]
         end
 
         subgraph "Service Layer"
