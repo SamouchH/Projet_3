@@ -25,8 +25,9 @@ Le projet se compose de deux modules complémentaires:
 - Assistant hybride combinant image + texte
 - Export facile des annonces
 
-## Architecture du projet
 
+## Architecture du projet
+```
 PROJET_3/
 |
 │ ├── dags/ 
@@ -72,6 +73,7 @@ PROJET_3/
 │
 ├── docker-compose.yml # Démarrage de tous les services
 └── .env # Clés API Claude / Mistral
+```
 
 
 ## Prérequis
