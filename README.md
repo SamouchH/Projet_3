@@ -80,7 +80,7 @@ PROJET_3/
 - Python 3.10+ (si non Docker)
 - Docker & Docker Compose
 - Clé API **Anthropic Claude** (obligatoire)
-- Clé API **Mistral** (recommandé)
+- Clé API **Mistral** (obligatoire)
 
 ---
 
@@ -90,8 +90,8 @@ PROJET_3/
 
 # 1. Cloner le projet
 ```bash
-git clone https://github.com/SamouchH/Projet_3.git
-cd Projet_3
+git clone https://github.com/D41g0na/Datascientest_Assistant_Annonce.git
+cd Datascientest_Assistant_Annonce
 ```
 
 # 2. Ajouter vos clés API
@@ -139,7 +139,7 @@ pytest -v
 ```
 
 ## Utilisation de l'assistant hybride
-1. Télécharger une image de jeu vidéo
+1. Télécharger une image de jeu vidéo présentent dans Data_to_test
 2. Analyse automatique via Claude (plateforme,titre, etc.) ou catégorisation par modèle Deep Learning
 3. Corrige les infos si besoin
 4. Choisissez Claude ou Mistral pour la génération
